@@ -103,22 +103,26 @@ def train_nn(sess, epochs, batch_size, get_batches_fn, train_op, cross_entropy_l
     :param learning_rate: TF Placeholder for learning rate
     """
     kp = 0.8  # keep prob  todo param
-    lr = 5e-5  # learning rate  todo param
+    lr = 1e-5  # learning rate  todo param
 
     losses = []
     for epoch in range(epochs):
         for imgs, labels in get_batches_fn(batch_size):
+            # Augment Images for better results
+            imgs, labels = augment_data(imgs, labels)
+
             sess.run(train_op, feed_dict={input_image: imgs, correct_label: labels, keep_prob: kp, learning_rate: lr})
             loss = sess.run(cross_entropy_loss, feed_dict={input_image: imgs, keep_prob: 1.0, correct_label: labels})
             losses.append(loss)
+            print('Epoch: ', epoch, '; loss: ', loss)
     return losses
 
 
 def run():
     num_classes = 2
     image_shape = (160, 576)
-    epochs = 30
-    batch_size = 4
+    epochs = 60
+    batch_size = 1
 
     data_dir = '/data'  # todo I use Floydhub to train my model, if using local machine, the path must be changed appropriately
     runs_dir = '/output'  # todo I use Floydhub to train my model, if using local machine, the path must be changed appropriately
@@ -128,8 +132,6 @@ def run():
         vgg_path = os.path.join(data_dir, 'vgg')
         # Create function to get batches
         get_batches_fn = gen_batch_function(os.path.join(data_dir, 'data_road/training'), image_shape)
-
-        # Augment Images for better results todo
 
         correct_label = tf.placeholder(tf.float32, [None, image_shape[0], image_shape[1], num_classes])
         learning_rate = tf.placeholder(tf.float32)

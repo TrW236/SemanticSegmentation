@@ -90,3 +90,50 @@ def gen_test_output(sess, logits, keep_prob, image_pl, data_folder, image_shape)
         street_im.paste(mask, box=None, mask=mask)
 
         yield os.path.basename(image_file), np.array(street_im)
+
+
+def add_light(img, light):  # [0, 255]
+    imcopy=np.copy(img)
+    imcopy = imcopy.astype(np.float32) + light
+    imcopy = np.maximum(imcopy, 0)
+    imcopy = np.minimum(imcopy, 255)
+    return imcopy.astype(np.uint8)
+
+
+def augment_data(imgs, labels, light=30):
+    res_imgs = []
+    res_labels = []
+    for img, label in zip(imgs, labels):
+        # original
+        res_imgs.append(img)
+        res_labels.append(label)
+        # flip
+        res_imgs.append(np.fliplr(img))
+        res_labels.append(np.fliplr(label))
+        # add light orig
+        res_imgs.append(add_light(img, light))
+        res_labels.append(label)
+        # add light flip
+        res_imgs.append(add_light(np.fliplr(img), light))
+        res_labels.append(np.fliplr(label))
+        # reduce light orig
+        res_imgs.append(add_light(img, -light))
+        res_labels.append(label)
+        # reduce light flip
+        res_imgs.append(add_light(np.fliplr(img), -light))
+        res_labels.append(np.fliplr(label))
+
+    return np.array(res_imgs), np.array(res_labels)
+
+
+def plot_imgs(imgs, labels):
+    import matplotlib.pyplot as plt
+    f, axs = plt.subplots(6, 2)
+    plt.subplots_adjust(wspace=0, hspace=0)
+    for i, (img, label) in enumerate(zip(imgs, labels)):
+        axs[i][0].imshow(img)
+        axs[i][0].axis('off')
+        axs[i][1].imshow(label[:, :, 1], cmap='gray')
+        axs[i][1].axis('off')
+    plt.show()
+
