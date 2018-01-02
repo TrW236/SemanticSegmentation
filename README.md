@@ -8,13 +8,13 @@
 
 I used the KITTI training data to train the model, and the training data would be augmented.
 
-The training data as matrixes have the size of `(?, height, width, 3)`, in which the last dimension 3 means the images have 3 channels respectively RGB. The label-images as matrixes have the size of `(?, height, width, 2)`, in which the last dimension 2 means there are 2 type of objects resprectively road and non-road surface.
+The training data as matrixes have the size of `(?, height, width, 3)`, in which the last dimension 3 means the images have three channels respectively RGB. The label images as matrixes have the size of `(?, height, width, 2)`, in which the last dimension 2 means there are two types of objects respectively road and non-road surface.
 
 <img src="https://filedn.com/lUE8ye7yWpzFOF1OFLVsPau/Github/semantic_segmentation/data_augmentation.png" alt="traning data" width="666">
 
 The images above show,
 
-1. The first row are the original image and the corresponding label-image. It is to mention that the white pixels in the label-image are the true road surface. The black area is the non-road area.
+1. The first row is the original image and the corresponding label-image. It is to mention that the white pixels in the label-image are the actual road surface. The black area is the non-road area.
 
 2. The second row is the image, which is flipped horizontally in comparison with the original image.
 
@@ -32,13 +32,13 @@ The images above show,
 
 As the diagram above shows, 
 
-1. The first row in this diagramm is a part of the VGG16 architecture. 
+1. The first row in this picture is a part of the VGG16 architecture. 
 
-2. The output of the layer 7 is connected with an `1x1` convolutional layer with the depth (the last dimension of a layer) of 2, which indicates that there are overall 2 types of objects to be classified, respectively road and non-road.
+2. The output of the layer 7 is connected with a `1x1` convolutional layer with the depth (the last dimension of a layer) of 2, which indicates that there are overall two types of objects to be classified, respectively road and non-road.
 
-3. The output of the layer 3 and 4 will be respectively also connected with an `1x1` convolutional layer, whose depth, in other words last dimension, is 2.
+3. The output of the layer 3 and 4 would be respectively also connected with a `1x1` convolutional layer, whose depth, in other words, the last dimension, was 2.
 
-4. All the three layers mentioned above are upsampled and added together. Finally the last layer is upsampled, in order to form an matrix, whose width and height are the same as the original image but the depth is 2.
+4. All the three layers mentioned above were upsampled and added together. Finally, the last layer was upsampled, to form a matrix, whose width and height were the same as the original image but the depth is 2.
 
 ## Train the Model
 
@@ -55,7 +55,7 @@ The training losses are shown below:
 
 <img src="https://filedn.com/lUE8ye7yWpzFOF1OFLVsPau/Github/semantic_segmentation/losses.png" alt="training losses" width="488">
 
-From the diagramm above we can see that the losses are convergent good, when the epoch is around 45.
+From the diagram above we can see that the losses are convergent good when the epoch is around 45.
 
 ## Result
 
